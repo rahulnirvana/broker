@@ -2,7 +2,7 @@ broker (js+psql)
 
 Inspiration: https://github.com/microsoft/TypeScript-Node-Starter (ts+mongo)
 
-prisma config generation: npx prisma generate
+prisma config generation: npx prisma generate,
 prisma table creation/migration: npx prisma migrate dev
 
 NPM RUN HTTPROTO
