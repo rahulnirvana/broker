@@ -1,11 +1,9 @@
-import { Router } from 'express';
 import { hash as _hash, compare } from 'bcrypt';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 import UserModel from '../models/user.js';
 const { User } = UserModel;
-const router = Router();
 
-router.post('/signup', async (req, res) => {
+export const signUp = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
     try {
@@ -17,15 +15,15 @@ router.post('/signup', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: 'Signup failed' });
     }
-});
+};
 
-router.post('/login', async (req, res) => {
+export const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
     try {
         const user = await User.findByEmail(email);
         if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-        const valid = await compare(password, user.password_hash);
+        const valid = await compare(password, user.passwordHash);
         if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
         const accessToken = generateAccessToken(user.id);
         const refreshToken = generateRefreshToken(user.id);
@@ -33,6 +31,4 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: 'Login failed' });
     }
-});
-
-export default router;
+};

@@ -1,25 +1,23 @@
 import 'dotenv/config';
 import express, { json } from 'express';
-import { authenticate } from './middleware/auth.js';
-import healthRoutes from './routes/health.js';
-import signRoutes from './routes/sign.js';
-import protectedRoutes from './routes/protected.js';
+import bodyParser from 'body-parser';
+import * as authMiddlware from './src/middleware/auth.js';
+import * as healthController from './src/controller/health.js';
+import * as signController from './src/controller/sign.js';
+import * as dataController from './src/controller/data.js';
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  const openPaths = ['/health', '/signup', '/login'];
-  if (openPaths.includes(req.path)) {
-    return next();
-  }
-  authenticate(req, res, next);
-});
-
-app.use(healthRoutes);
-app.use(signRoutes);
-app.use(protectedRoutes);
+app.get("/health", healthController.healthCheck);
+app.post("/signup", signController.signUp);
+app.post("/login", signController.login);
+app.get("/refreshToken", authMiddlware.refreshAccessToken);
+app.get("/holdings", authMiddlware.isAuthenticated, dataController.getHoldings);
+app.get("/orderbook", authMiddlware.isAuthenticated, dataController.getOrderBook);
+app.get("/positions", authMiddlware.isAuthenticated, dataController.getPositions);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
