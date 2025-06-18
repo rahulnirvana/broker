@@ -1,3 +1,9 @@
+-- create a user first using /signup api
+
+INSERT INTO public.users (email, password_hash, created_at, updated_at) VALUES('abc@gmail.com', '$2b$10$qk9YbVxTb6AzYudI72U44eExTjFWHndpbiPTwaoMRcW.e9KVMtXf.', '2025-06-18 18:26:40.835', '2025-06-18 18:26:40.835');
+-- if you don't want to
+
+
 INSERT INTO public."Holding"  (symbol, qty, "avgPrice", "userId", "createdAt", "updatedAt") VALUES
 ('AAPL', 50, 175.25, 1, NOW(), NOW()),
 ('GOOGL', 10, 2850.00, 1, NOW(), NOW()),
